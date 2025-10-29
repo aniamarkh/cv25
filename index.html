@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="ru">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Анна Марченко</title>
+  <meta name="description"
+    content="Фронтенд-разработчик. Создаю интерфейсы, которыми удобно пользоваться и легко поддерживать." />
+  <meta name="robots" content="index,follow" />
+  <link rel="icon" type="image/x-icon" href="./images/favicon.ico">
+
+
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    .reveal {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    .reveal--visible {
+      opacity: 1;
+      transform: none;
+      transition: opacity .4s ease, transform .4s ease;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal {
+        opacity: 1;
+        transform: none;
+      }
+
+      .reveal--visible {
+        transition: none;
+      }
+    }
+  </style>
+</head>
+
+<body class="antialiased bg-zinc-900 text-zinc-100 font-mono">
+  <main class="mx-auto max-w-5xl px-6 py-12 space-y-8" v-scope="App()">
+    <header class="flex flex-col gap-2 sm:flex">
+      <h1 class="text-3xl font-bold tracking-tight">Привет! Я Анна</h1>
+      <p class="opacity-90">
+        Фронтенд-разработчик
+      </p>
+
+      <nav class="flex flex-wrap gap-x-4 gap-y-1 text-sm">
+        <a :href="links.telegram" target="_blank" class="underline hover:opacity-70 transition-opacity">Telegram</a>
+        <a :href="links.github" target="_blank" class="underline hover:opacity-70 transition-opacity">GitHub</a>
+        <a :href="links.linkedin" target="_blank" class="underline hover:opacity-70 transition-opacity">LinkedIn</a>
+        <a :href="links.email" class="underline hover:opacity-70 transition-opacity">aniamarkh@gmail.com</a>
+      </nav>
+    </header>
+
+    <section class="grid gap-2">
+      <h2 class="text-xl font-semibold">О себе</h2>
+      <p>
+        Создаю интерфейсы, которыми удобно пользоваться и легко поддерживать.
+      </p>
+
+      <p>
+        Использую Nuxt, Vue и их экосистему, TypeScript, Node.js.
+        <br />
+        Верстаю адаптивно, кросс-браузерно и pixel-perfect, умею и люблю работать со сложными анимациями.
+      </p>
+
+      <p>
+        При разработке ориентируюсь на
+        бизнес-цели и успешно довожу ценность от идеи к клиенту.
+      </p>
+    </section>
+
+    <section class="space-y-4">
+      <h2 class="text-xl font-semibold">Опыт</h2>
+
+      <div class="grid gap-4">
+        <article v-for="job in jobs" :key="job.id" v-scope="Job(job)" @vue:mounted="mounted($el)"
+          class="border border-zinc-700 p-4 hover:border-zinc-400 transition reveal"
+          :class="{'reveal--visible': visible}">
+
+          <header class="flex flex-col gap-2 flex-nowrap">
+            <h3 class="font-semibold">{{ item.role }}</h3>
+            <a :href="item.url" target="_blank" class="hover:opacity-70 transition-opacity underline">
+              {{ item.company}}
+            </a>
+            <p class="text-sm opacity-60">{{ item.period }}</p>
+          </header>
+
+          <p class="mt-2 opacity-90">{{ item.description }}</p>
+
+          <ul class="mt-3 flex flex-wrap gap-2">
+            <li v-for="t in item.stack" :key="t" class="text-xs px-2 py-1 bg-zinc-700 text-zinc-200">{{ t }}</li>
+          </ul>
+          <ul class="list-disc pl-5 mt-3 text-sm opacity-80 space-y-1">
+            <li v-for="point in item.points" :key="pt">{{ point }}</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="space-y-4">
+      <div class="flex items-baseline justify-between">
+        <h2 class="text-xl font-semibold">Проекты</h2>
+      </div>
+
+      <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+
+        <article v-for="it in projects" :key="it.id" v-scope="Project(it)" @vue:mounted="mounted($el)"
+          class="border border-zinc-700 p-4 flex flex-col hover:border-zinc-400 transition reveal"
+          :class="{'reveal--visible': visible}">
+          <header class="mb-2">
+            <h3 class="font-semibold leading-tight">{{ item.title }}</h3>
+            <p class="text-sm opacity-70">{{ item.subtitle }}</p>
+          </header>
+
+          <p class="text-sm opacity-80">{{ item.description }}</p>
+
+          <ul class="mt-3 flex flex-wrap gap-2">
+            <li v-for="tag in item.tags" :key="t" class="text-xs px-2 py-1 bg-zinc-700 text-zinc-200">{{ tag }}
+            </li>
+          </ul>
+
+          <footer class="mt-auto pt-4 flex items-center gap-3">
+            <a v-if="item.link" :href="item.link" target="_blank"
+              class="text-sm underline hover:opacity-70 transition-opacity">Демо</a>
+            <a v-if="item.repo" :href="item.repo" target="_blank"
+              class="text-sm underline hover:opacity-70 transition-opacity">Код</a>
+            <span class="ml-auto text-xs opacity-60">{{ item.year }}</span>
+          </footer>
+        </article>
+
+        <article class="p-4 flex flex-col">
+          <p class="text-sm opacity-80">Остальные пет-проекты можно посмотреть в
+            <a href="https://cv-drab-two.vercel.app/" target="_blank"
+              class="text-sm underline hover:opacity-70 transition-opacity">
+              старой версии моего портфолио.</a>
+          </p>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <script src="https://unpkg.com/petite-vue" defer init></script>
+  <script>
+    function App() {
+      return {
+        links: {
+          github: 'https://github.com/aniamarkh',
+          linkedin: 'https://www.linkedin.com/in/aniamarkh',
+          email: 'mailto:aniamarkh@gmail.com',
+          telegram: 'https://t.me/aniamarkh',
+        },
+        get emailText() { return 'aniamarkh@gmail.com'; },
+
+        projects: [
+          {
+            id: 1, title: 'Kartotek', subtitle: 'Расширение для Chrome', year: '2023',
+            description: 'Менеджер закладок с drag-and-drop, кастомной темой и полной синхронизацией данных.',
+            tags: ['Chrome API', 'Vue 3', 'TypeScript', 'Vue.Draggable', 'Vueform'],
+            link: 'https://chromewebstore.google.com/detail/kartotek/hcinbgecljcibhpfpjibkodifeaanjep', repo: 'https://github.com/aniamarkh/bookmarks'
+          },
+          {
+            id: 2, title: 'WYSIWYG editor', subtitle: 'Текстовый редактор', year: '2023',
+            description: 'Редактирование текста, навигация по истории, форматирование, вставка изображений по URL и копирование HTML в буфер обмена.',
+            tags: ['Vue 3', 'TipTap'],
+            link: 'https://editor-wysiwyg.vercel.app/', repo: 'https://github.com/aniamarkh/editor-wysiwyg'
+          },
+        ],
+
+        jobs: [
+          {
+            id: 1,
+            role: 'Frontend Developer',
+            company: '05.ру',
+            url: 'https://market.05.ru/',
+            period: '2023 — 2025',
+            description: 'Разработка маркетплейса офлайн-магазинов региона в кросс-функциональной команде.',
+            points: [
+              'Запуск основых пользовательских контуров: личные кабинеты, каталог, акции, чат, оформление и трекинг заказов, зоны доставки, избранное.',
+              'Разработка админ-панели с динамическими формами и строгой валидацией (VeeValidate, Zod): ускорила ввод ассортимента и сократила ручные ошибки.',
+              'Совместно с дизайнерами разработала UI-kit на Vue 3 и Storybook: унифицировали интерфейсы и ускорили поставку за счёт переиспользования компонентов.',
+              'Участвовала в разработке и интегрировала конструктор промо-страниц (инструмент для создания страниц без участия разработчиков): выпуск промо сократился с 2–3 недель до нескольких часов, конверсия промо выросла.',
+              'Покрыла критические сценарии unit- и интеграционными тестами (Vitest, Vue Test Utils).',
+              'Проводила собеседования, онбординг, код-ревью, менторила младших коллег.'],
+            stack: ['Nuxt 2/3', 'Vue 2/3', 'TypeScript', 'Node.js', 'Temporal.io', 'PostCSS']
+          },
+          {
+            id: 2,
+            role: 'Junior Frontend Developer',
+            company: 'Kryptex',
+            url: 'https://pool.kryptex.com/ru',
+            period: '2022 — 2023',
+            description: 'Разрабатывала веб-приложение на позиции младшего фронтенд-разработчика в небольшой продуктовой команде совместно с ведущим разработчиком и дизайнером.',
+            points: [
+              'Адаптивная pixel-perfect вёрстка компонентов, лендингов, email-рассылок.',
+              'Поддержка, создание и рефактор переиспользуемых компонентов для личного кабинета, онбординга, базы знаний, калькуляторов, графиков выплат и доходности.',
+            ],
+            stack: ['Nuxt 2', 'Vue 2', 'Tailwind CSS', 'MJML', 'ECharts']
+          },
+        ],
+      }
+    }
+
+    function revealOnIntersect(el, show) {
+      if (!el) return;
+      const io = new IntersectionObserver((entries, obs) => {
+        for (const en of entries) {
+          if (en.isIntersecting) { show(); obs.unobserve(en.target); }
+        }
+      }, { threshold: 0.15, rootMargin: '0px 0px -5% 0px' });
+      io.observe(el);
+    }
+
+    function Project(item) {
+      return {
+        item,
+        visible: false,
+        mounted(el) { revealOnIntersect(el, () => { this.visible = true; }); }
+      };
+    }
+    function Job(item) {
+      return {
+        item,
+        visible: false,
+        mounted(el) { revealOnIntersect(el, () => { this.visible = true; }); }
+      };
+    }
+  </script>
+</body>
+
+</html>
