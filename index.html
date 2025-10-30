@@ -36,16 +36,45 @@
       }
     }
 
+    ::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: #18181b;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: #3f3f46;
+      border-radius: 6px;
+      border: 2px solid #18181b;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: #f4f4f5;
+    }
+
+    * {
+      scrollbar-width: thin;
+      scrollbar-color: #3f3f46 #18181b;
+    }
+
     .cat {
       width: 200px;
       height: 184px;
       position: fixed;
       bottom: -45px;
-      right: 50px;
+      right: 300px;
       z-index: 10;
       transform: translateY(250px);
       transition: transform 0.6s ease-out;
       cursor: pointer;
+    }
+
+    @media (max-width: 1400px) {
+      .cat {
+        right: 100px;
+      }
     }
 
     .cat__face {
@@ -116,11 +145,11 @@
   </style>
 </head>
 
-<body class="antialiased bg-zinc-900 text-zinc-100 font-mono">
+<body class="antialiased bg-zinc-900 text-zinc-50 font-mono">
   <main class="mx-auto max-w-5xl px-6 pb-36 pt-12 sm:py-12 space-y-8" v-scope="App()" @vue:mounted="mounted">
     <header class="flex flex-col gap-2 sm:flex">
       <h1 class="text-3xl font-bold tracking-tight">Привет! Я Анна</h1>
-      <p class="opacity-90 mb-2">
+      <p class="mb-2">
         Фронтенд-разработчик
       </p>
 
@@ -155,7 +184,7 @@
 
       <div class="grid gap-4">
         <article v-for="job in jobs" :key="job.id" v-scope="Job(job)" @vue:mounted="mounted($el)"
-          class="border border-zinc-700 p-4 hover:border-zinc-400 transition reveal"
+          class="border border-zinc-700 p-4 hover:border-zinc-500 transition reveal"
           :class="{'reveal--visible': visible}">
 
           <header class="flex flex-col gap-2 flex-nowrap">
@@ -166,10 +195,10 @@
             <p class="text-sm opacity-60">{{ item.period }}</p>
           </header>
 
-          <p class="mt-2 opacity-90">{{ item.description }}</p>
+          <p class="mt-2">{{ item.description }}</p>
 
           <ul class="mt-3 flex flex-wrap gap-2">
-            <li v-for="t in item.stack" :key="t" class="text-xs px-2 py-1 bg-zinc-700 text-zinc-200">{{ t }}</li>
+            <li v-for="t in item.stack" :key="t" class="text-xs px-2 py-1 bg-zinc-700 text-zinc-100">{{ t }}</li>
           </ul>
           <ul class="list-disc pl-5 mt-3 text-sm opacity-80 space-y-1">
             <li v-for="point in item.points" :key="pt">{{ point }}</li>
@@ -186,7 +215,7 @@
       <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 
         <article v-for="it in projects" :key="it.id" v-scope="Project(it)" @vue:mounted="mounted($el)"
-          class="border border-zinc-700 p-4 flex flex-col hover:border-zinc-400 transition reveal"
+          class="border border-zinc-700 p-4 flex flex-col hover:border-zinc-500 transition reveal"
           :class="{'reveal--visible': visible}">
           <header class="mb-2">
             <h3 class="font-semibold leading-tight">{{ item.title }}</h3>
@@ -196,7 +225,7 @@
           <p class="text-sm opacity-80">{{ item.description }}</p>
 
           <ul class="mt-3 flex flex-wrap gap-2">
-            <li v-for="tag in item.tags" :key="t" class="text-xs px-2 py-1 bg-zinc-700 text-zinc-200">{{ tag }}
+            <li v-for="tag in item.tags" :key="t" class="text-xs px-2 py-1 bg-zinc-700 text-zinc-100">{{ tag }}
             </li>
           </ul>
 
