@@ -35,14 +35,92 @@
         transition: none;
       }
     }
+
+    .cat {
+      width: 200px;
+      height: 184px;
+      position: fixed;
+      bottom: -45px;
+      right: 50px;
+      z-index: 10;
+      transform: translateY(250px);
+      transition: transform 0.6s ease-out;
+      cursor: pointer;
+    }
+
+    .cat__face {
+      position: absolute;
+      z-index: 3;
+    }
+
+    .cat__eyes {
+      position: absolute;
+      z-index: 1;
+      top: 69px;
+      left: 17px;
+    }
+
+    .cat__pupils {
+      position: absolute;
+      z-index: 2;
+      top: 66px;
+      left: 29px;
+      transition: transform 0.1s ease-out;
+    }
+
+    @media (hover: none) and (pointer: coarse) {
+      .cat__pupils:not(.cat__pupils--hovered) {
+        animation: mobilePupilMove 3s ease-in-out infinite;
+      }
+    }
+
+    @keyframes mobilePupilMove {
+
+      0%,
+      100% {
+        transform: translate(0, 0);
+      }
+
+      50% {
+        transform: translate(-8px, -6px);
+      }
+    }
+
+    .cat.visible {
+      transform: translateY(0);
+    }
+
+    .cat.bounce {
+      animation: bounce 0.4s ease-in-out;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      25% {
+        transform: translateY(-10px);
+      }
+
+      50% {
+        transform: translateY(-5px);
+      }
+
+      75% {
+        transform: translateY(-10px);
+      }
+    }
   </style>
 </head>
 
 <body class="antialiased bg-zinc-900 text-zinc-100 font-mono">
-  <main class="mx-auto max-w-5xl px-6 py-12 space-y-8" v-scope="App()">
+  <main class="mx-auto max-w-5xl px-6 pb-36 pt-12 sm:py-12 space-y-8" v-scope="App()" @vue:mounted="mounted">
     <header class="flex flex-col gap-2 sm:flex">
       <h1 class="text-3xl font-bold tracking-tight">Привет! Я Анна</h1>
-      <p class="opacity-90">
+      <p class="opacity-90 mb-2">
         Фронтенд-разработчик
       </p>
 
@@ -141,6 +219,12 @@
 
       </div>
     </section>
+
+    <div class="cat" ref="cat">
+      <img class="cat__face" src="./images/face.svg" />
+      <img class="cat__eyes" src="./images/eyes.svg" />
+      <img class="cat__pupils" src="./images/pupils.svg" ref="pupils" />
+    </div>
   </main>
 
   <script src="https://unpkg.com/petite-vue" defer init></script>
@@ -153,8 +237,6 @@
           email: 'mailto:aniamarkh@gmail.com',
           telegram: 'https://t.me/aniamarkh',
         },
-        get emailText() { return 'aniamarkh@gmail.com'; },
-
         projects: [
           {
             id: 1, title: 'Kartotek', subtitle: 'Расширение для Chrome', year: '2023',
@@ -201,6 +283,89 @@
             stack: ['Nuxt 2', 'Vue 2', 'Tailwind CSS', 'MJML', 'ECharts']
           },
         ],
+        catHovered: false,
+        catElement: null,
+
+        mounted() {
+          this.catElement = this.$refs.cat;
+
+          document.addEventListener('mousemove', this.handleGlobalMouseMove);
+          window.addEventListener('scroll', this.handleScroll);
+
+          if (this.catElement) {
+            this.catElement.addEventListener('click', this.handleCatClick);
+          }
+        },
+
+        unmounted() {
+          document.removeEventListener('mousemove', this.handleGlobalMouseMove);
+          window.removeEventListener('scroll', this.handleScroll);
+
+          if (this.catElement) {
+            this.catElement.removeEventListener('click', this.handleCatClick);
+          }
+        },
+
+        handleScroll() {
+          if (!this.catElement) return;
+
+          const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+          const windowHeight = window.innerHeight;
+          const docHeight = document.documentElement.scrollHeight;
+
+          const shouldShow = scrollTop + windowHeight >= docHeight * 0.9;
+          this.catElement.classList.toggle('visible', shouldShow);
+        },
+
+        handleCatClick() {
+          if (!this.catElement) return;
+
+          this.catElement.classList.add('bounce');
+          setTimeout(() => {
+            this.catElement.classList.remove('bounce');
+          }, 400);
+        },
+
+        handleGlobalMouseMove(e) {
+          const pupils = this.$refs.pupils;
+          if (!pupils) return;
+
+          this.updatePupilPosition(pupils, e);
+        },
+
+        updatePupilPosition(pupils, e) {
+          const catElement = pupils.closest('.cat');
+          if (!catElement) return;
+
+          const catRect = catElement.getBoundingClientRect();
+          const pupilsCenterX = catRect.left + 29 + pupils.offsetWidth / 2;
+          const pupilsCenterY = catRect.top + 66 + pupils.offsetHeight / 2;
+
+          const deltaX = e.clientX - pupilsCenterX;
+          const deltaY = e.clientY - pupilsCenterY;
+
+          const maxMove = 15;
+          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+          let moveX = deltaX;
+          let moveY = deltaY;
+
+          if (distance > maxMove) {
+            moveX = (deltaX / distance) * maxMove;
+            moveY = (deltaY / distance) * maxMove;
+          }
+
+          // make pupils bigger on cat's nose boop
+          const catCenterX = catRect.left + catRect.width / 2;
+          const catCenterY = catRect.top + 30 + catRect.height / 2;
+          const distFromCenter = Math.sqrt(
+            Math.pow(e.clientX - catCenterX, 2) + Math.pow(e.clientY - catCenterY, 2)
+          );
+          this.catHovered = distFromCenter <= 20;
+
+          const scale = this.catHovered ? 1.2 : 1;
+          pupils.style.transform = `translate(${moveX}px, ${moveY}px) scale(${scale})`;
+        },
       }
     }
 
@@ -221,6 +386,7 @@
         mounted(el) { revealOnIntersect(el, () => { this.visible = true; }); }
       };
     }
+
     function Job(item) {
       return {
         item,
