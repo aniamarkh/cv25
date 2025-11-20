@@ -203,12 +203,15 @@
           <ul class="mt-3 flex flex-wrap gap-2">
             <li v-for="t in item.stack" :key="t" class="text-xs px-2 py-1 bg-zinc-700 text-zinc-100">{{ t }}</li>
           </ul>
+
+          <p class="mt-4">Обязанности:</p>
+
           <ul class="list-disc pl-5 mt-3 text-sm opacity-80 space-y-1">
-            <br />
-            <p class="font-semibold">Обязанности:</p>
             <li v-for="point, index in item.points" :key="index">{{ point }}</li>
-            <br />
-            <p class="font-semibold">Достижения:</p>
+          </ul>
+
+          <p class="mt-4">Достижения:</p>
+          <ul class="list-disc pl-5 mt-3 text-sm opacity-80 space-y-1">
             <li v-for="achievement, index in item.achievements" :key="index">{{ achievement }}</li>
           </ul>
         </article>
@@ -298,9 +301,8 @@
             period: '2023 — 2025',
             description: 'Разработка маркетплейса офлайн-магазинов региона в кросс-функциональной команде.',
             points: [
-              'Ведение фич от идеи до релиза: участие в PBR и оценках, проработка пользовательских сценариев, разбор макетов и API-контрактов вместе с командой.',
+              'Ведение фич от идеи до релиза: участие в PBR и оценках, проработка сценариев, разбор макетов и API-контрактов вместе с командой.',
               'Интеграция фронтенда с Temporal backend-for-frontend поверх микросервисов.',
-              'Совместно с дизайнерами разработала UI-kit на Vue 3 и Storybook: унифицировали интерфейсы и ускорили поставку за счёт переиспользования компонентов.',
               'Создание и поддержка UI-kit и библиотек компонентов, настройка Storybook.',
               'Написание unit- и интеграционных тестов (Vitest, Vue Test Utils).',
               'Код-ревью и онбординг младших коллег.'],
